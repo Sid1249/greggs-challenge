@@ -1,21 +1,49 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:greggs_sausage/core/services/cart_service/models/cart_model.dart';
 import 'package:greggs_sausage/core/services/cart_service/models/cart_response_wrapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class FlutterCart {
-  static final FlutterCart _instance = FlutterCart._internal();
+class CartService {
+  static final CartService _instance = CartService._internal();
   late CartItem _cartItem;
   late List<CartItem> _cartItemList;
-  List<CartItem> get cartItem => _cartItemList;
+  List<CartItem> get allCartItems => _cartItemList;
   late List<String> _uuid;
   bool _filterItemFound = false;
   late CartResponseWrapper message;
-  factory FlutterCart() {
+  static const String _cartKey = "cartItems";
+
+  factory CartService() {
     return _instance;
   }
-  FlutterCart._internal() {
+  CartService._internal() {
     _cartItemList = <CartItem>[];
     _uuid = [];
+    loadCartItems();
+  }
+
+  void loadCartItems()  {
+    final SharedPreferences prefs = GetIt.I<SharedPreferences>();
+    final String? cartJson = prefs.getString(_cartKey);
+    print('Loading cart items from SharedPreferences'); // Debug print
+    if (cartJson != null) {
+      print('Found cart items in SharedPreferences'); // Debug print
+      List<dynamic> jsonList = json.decode(cartJson);
+      _cartItemList = jsonList.map((e) => CartItem.fromJson(e)).toList();
+      print('Loaded ${_cartItemList.length} items'); // Debug print
+    } else {
+      print('No cart items found in SharedPreferences'); // Debug print
+    }
+  }
+
+
+  Future<void> saveCartItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    String jsonList = json.encode(_cartItemList.map((e) => e.toJson()).toList());
+    await prefs.setString(_cartKey, jsonList);
   }
 
   /// This method is called when we have to add [productTemp] into cart
@@ -36,6 +64,7 @@ class FlutterCart {
       _cartItemList.add(_cartItem);
 
       message = CartResponseWrapper(true, _successMessage, _cartItemList);
+      saveCartItems();
       return message;
     } else {
       _cartItemList.forEach((x) {
@@ -73,36 +102,65 @@ class FlutterCart {
         message = CartResponseWrapper(true, _successMessage, _cartItemList);
       }
       _filterItemFound = false;
+      saveCartItems();
       return message;
     }
   }
 
-  /// This function is used to decrement the item quantity from cart
-  decrementItemFromCart(int index) {
-    if (_cartItemList[index].quantity > 1) {
-      _cartItemList[index].quantity = --_cartItemList[index].quantity;
-      _cartItemList[index].subTotal =
-          (_cartItemList[index].quantity * _cartItemList[index].unitPrice)
-              .roundToDouble();
-    } else {
-      _cartItemList.removeAt(index);
-      return CartResponseWrapper(true, _removedMessage, _cartItemList);
-      // return true;
+
+  /// This function is used to increment the item quantity into cart
+  decrementItemFromCart(String productId) {
+    int index = _findItemIndex(productId);
+
+    if (index != -1) {
+      if (_cartItemList[index].quantity > 1) {
+        _cartItemList[index].quantity--;
+        _cartItemList[index].subTotal =
+            (_cartItemList[index].quantity * _cartItemList[index].unitPrice);
+      } else {
+        _cartItemList.removeAt(index);
+      }
+      saveCartItems();
     }
-    return CartResponseWrapper(true, _removedMessage, _cartItemList);
   }
 
-  deleteItemFromCart(int index) {
-    for (int i = _cartItemList[index].quantity; i > 0; i--) {
-      decrementItemFromCart(index);
+  incrementItemToCart(String productId) {
+    int index = _findItemIndex(productId);
+
+    if (index != -1) {
+        _cartItemList[index].quantity++;
+        _cartItemList[index].subTotal =
+            (_cartItemList[index].quantity * _cartItemList[index].unitPrice);
+
+      saveCartItems();
     }
-    message = CartResponseWrapper(true, _successMessage, _cartItemList);
-    return message;
+  }
+
+  deleteItemFromCart(String productId) {
+    int index = _findItemIndex(productId);
+
+    if (index != -1) {
+      int quantity = _cartItemList[index].quantity;
+      for (int i = quantity; i > 0; i--) {
+        decrementItemFromCart(productId);
+      }
+      saveCartItems();
+    }
+  }
+
+  int _findItemIndex(String productId) {
+    for (int index = 0; index < _cartItemList.length; index++) {
+      if (_cartItemList[index].productId == productId) {
+        return index;
+      }
+    }
+    return -1; // Product not found in cart
   }
 
   deleteAllCart() {
     _cartItemList = <CartItem>[];
     _uuid = <String>[];
+    saveCartItems();
   }
 
   int? findItemIndexFromCart(cartId) {
@@ -124,15 +182,6 @@ class FlutterCart {
     return null;
   }
 
-  /// This function is used to increment the item quantity into cart
-  incrementItemToCart(int index) {
-    _cartItemList[index].quantity = ++_cartItemList[index].quantity;
-    _cartItemList[index].subTotal =
-        (_cartItemList[index].quantity * _cartItemList[index].unitPrice)
-            .roundToDouble();
-
-    return CartResponseWrapper(true, _successMessage, _cartItemList);
-  }
 
   /// This method is called when we have to [initialize the values in our cart object]
   void _setProductValues(productId, unitPrice, productName, int quantity,
@@ -152,6 +201,7 @@ class FlutterCart {
     cartObject.quantity = quantity;
     cartObject.subTotal =
         double.parse((quantity * unitPrice).toStringAsFixed(2));
+    saveCartItems();
   }
 
   /// This method is called when we have to get the [cart lenght]
@@ -159,12 +209,45 @@ class FlutterCart {
     return _cartItemList.length;
   }
 
+  int getRawCartItemCount() {
+    int itemCount = 0;
+    for (var item in _cartItemList) {
+      itemCount += item.quantity;
+    }
+    return itemCount;
+  }
+
+
+  int getTotalQuantityForSingleItem(String productId) {
+    int totalQuantity = 0;
+    for (var item in _cartItemList) {
+      if (item.productId == productId) {
+        totalQuantity += item.quantity;
+      }
+    }
+    return totalQuantity;
+  }
+
+
   /// This method is called when we have to get the [Total amount]
   getTotalAmount() {
     double totalAmount = 0.0;
-    _cartItemList.forEach((e) => totalAmount += e.subTotal);
+    for (var e in _cartItemList) {
+      totalAmount += e.subTotal;
+    }
     return totalAmount;
   }
+
+  double getTotalAmountForSingleItem(String productId) {
+    double totalAmount = 0.0;
+    for (var item in _cartItemList) {
+      if (item.productId == productId) {
+        totalAmount += item.subTotal;
+      }
+    }
+    return totalAmount;
+  }
+
 
   static const String _successMessage = "Item added to cart successfully.";
   static const String _updateMessage = "Item updated successfully.";
