@@ -48,7 +48,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 class AppColors {
   static const Color primaryColor = Colors.blue;
   static const Color lightPrimaryColor = Colors.lightBlue;
-  static const Color blackColor = Colors.black87;
+  static const Color blackColor = Colors.black;
+  static const Color blackLite = Colors.black87;
   static const Color whiteColor = Colors.white;
   static const Color greenColor = Colors.green;
   static const Color greyColor = Colors.grey;
@@ -101,7 +102,7 @@ class AppTheme {
         surface: AppColors.whiteColor,
         background: AppColors.whiteColor,
         error: AppColors.redColor,
-        onPrimary: AppColors.blackColor,
+        onPrimary: AppColors.blackLite,
         onSecondary: AppColors.greyColor,
         onSurface: AppColors.greyColor300,
         onBackground: AppColors.blackColor,

@@ -19,6 +19,7 @@ import 'package:greggs_sausage/routes/routes.gr.dart';
 class ItemPage extends StatelessWidget {
   ItemPage({super.key});
 
+
   final ValueNotifier<bool> _isProductsLoaded = ValueNotifier(false);
 
   @override
@@ -26,6 +27,7 @@ class ItemPage extends StatelessWidget {
     final CartService cartService = CartService();
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
           if (state is ProductInitialState) {
@@ -71,8 +73,7 @@ class ItemPage extends StatelessWidget {
       BuildContext context, FoodItemModel sausageRoll) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme!.surface,
-        borderRadius: BorderRadius.circular(12.0),
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.2),
@@ -90,8 +91,10 @@ class ItemPage extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: Icon(Icons.menu,color: Theme.of(context).colorScheme.onPrimary,),
-                onPressed: () {},
+                icon: Icon(Icons.menu,color: Theme.of(context).colorScheme.onBackground,),
+                onPressed: () {
+
+                },
               ),
               const Spacer(),
               Image.asset(
@@ -100,7 +103,7 @@ class ItemPage extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
-                icon: Icon(Icons.dark_mode, color: Theme.of(context).colorScheme.onPrimary,),
+                icon: Icon(Icons.dark_mode, color: Theme.of(context).colorScheme.onBackground,),
                 onPressed: () {
                   context.read<ThemeBloc>().add(ToggleThemeEvent(
                       !BlocProvider.of<ThemeBloc>(context).isDarkMode));
@@ -208,6 +211,7 @@ class ItemPage extends StatelessWidget {
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     height: 1.5,
+                                color: Theme.of(context).colorScheme.onPrimary
                                   ),
                         ),
                         const SizedBox(height: 16),

@@ -222,7 +222,9 @@ class CartPage extends StatelessWidget {
                   ),
                   child: Text(
                     "View My Resume",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.surface
+                    ),
                   ),
                   onPressed: () {
                     _openResume();
