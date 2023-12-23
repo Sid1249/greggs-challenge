@@ -70,11 +70,11 @@ class ItemPage extends StatelessWidget {
       BuildContext context, FoodItemModel sausageRoll) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme!.surface,
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -181,8 +181,7 @@ class ItemPage extends StatelessWidget {
                         const SizedBox(height: 24),
                         Text(
                           sausageRoll.customerDescription,
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             height: 1.5,
                             color: Colors.black54,
                           ),

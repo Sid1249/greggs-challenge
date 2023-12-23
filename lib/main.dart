@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greggs_sausage/core/bloc/cart_bloc/bloc.dart';
+import 'package:greggs_sausage/core/themes/theme_bloc.dart';
 import 'package:greggs_sausage/core/utils/scaffold_context_holder.dart';
 import 'package:greggs_sausage/features/item_page/bloc/product_bloc/bloc.dart';
 import 'package:greggs_sausage/routes/routes.dart';
@@ -15,7 +16,8 @@ void main() {
 }
 
 Future<void> setUpGetIt() async {
-  GetIt.I.registerSingleton(await SharedPreferences.getInstance(),signalsReady: true);
+  GetIt.I.registerSingleton(await SharedPreferences.getInstance(),
+      signalsReady: true);
   GetIt.I.registerLazySingleton<CartService>(() => CartService());
   GetIt.I.registerLazySingleton<FoodItemRepository>(() => FoodItemRepository());
 }
@@ -31,30 +33,42 @@ class MyApp extends StatelessWidget {
         future: allServicesReady,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return MaterialApp.router(
-              scaffoldMessengerKey: snackbarKey,
-              debugShowCheckedModeBanner: false,
-              title: 'Greggs',
-              routerConfig: appRouter.config(),
-              themeMode: ThemeMode.dark,
-              builder: (context, child) {
-                return MultiBlocProvider(
-                  providers: [
-                    BlocProvider<CartBloc>(
-                      create: (context) => CartBloc(GetIt.I<CartService>()),
-                    ),
-                    BlocProvider<ProductBloc>(
-                      create: (context) => ProductBloc(GetIt.I<FoodItemRepository>()),
-                    ),
-                  ],
-                  child: child ?? Container(),
-                );
-              },
+            return BlocProvider(
+              create: (context) => ThemeBloc(),
+              child: BlocBuilder<ThemeBloc, ThemeState>(
+                builder: (context, themeState) {
+                  return MaterialApp.router(
+                    scaffoldMessengerKey: snackbarKey,
+                    debugShowCheckedModeBanner: false,
+                    title: 'Greggs',
+                    routerConfig: appRouter.config(),
+                    theme: AppTheme.lightTheme,
+                    darkTheme: AppTheme.darkTheme,
+                    themeMode: themeState.themeMode,
+                    builder: (context, child) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<CartBloc>(
+                              create: (context) =>
+                                  CartBloc(GetIt.I<CartService>()),
+                            ),
+                            BlocProvider<ProductBloc>(
+                              create: (context) =>
+                                  ProductBloc(GetIt.I<FoodItemRepository>()),
+                            ),
+                          ],
+                          child: child ??
+                              const Center(
+                                  child:
+                                      Text('Bloc not initialized properly')));
+                    },
+                  );
+                },
+              ),
             );
           } else {
             return const CircularProgressIndicator();
           }
-        }
-    );
+        });
   }
 }

@@ -32,16 +32,12 @@ class AddToCartButton extends StatelessWidget {
           height: 24, // Fixed height for the button
           child: Center(
             child: itemCount == 0
-                ? const Row(
+                ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'Add To Basket',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.surface)
                 ),
               ],
             )
@@ -52,10 +48,10 @@ class AddToCartButton extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: GestureDetector(
                     onTap: onDecrement,
-                    child: const Icon(
+                    child: Icon(
                       Icons.remove,
                       // onPressed: onDecrement,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme!.surface,
                     ),
                   ),
                 ),
@@ -63,20 +59,20 @@ class AddToCartButton extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     '$itemCount',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme!.surface,
                     ),
                   ),
                 ),
                 Padding(padding:
                   const EdgeInsets.only(right: 8.0),                  child: GestureDetector(
                     onTap: onIncrement,
-                    child: const Icon(
+                    child: Icon(
                       Icons.add,
                       // onPressed: onDecrement,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme!.surface,
                     ),
                   ),
                 ),

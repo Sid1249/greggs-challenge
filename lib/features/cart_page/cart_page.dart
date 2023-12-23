@@ -24,14 +24,14 @@ class CartPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Your Cart',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         ),
         centerTitle: true,
         elevation: 0,
-        leading: const BackButton(
-          color: Colors.black,
+        leading: BackButton(
+          color: Theme.of(context).colorScheme.onBackground,
         ),
       ),
       body: cartBloc
@@ -74,15 +74,15 @@ class CartPage extends StatelessWidget {
               tag: 'roll',
               child: CachedNetworkImage(
                 imageUrl: product!.imageUri,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
                 width: 75,
               ),
             )
             else
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.fastfood_rounded,color: Colors.grey[700],),
+                child: Icon(Icons.fastfood_rounded,color: Theme.of(context).colorScheme.secondaryContainer,),
               ),
             const SizedBox(width: 10),
             Expanded(
@@ -90,12 +90,10 @@ class CartPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(product?.articleName ?? 'Product Name',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
                   Text(
                       '\$${cartBloc.cartService.getTotalAmountForSingleItem(product!.articleCode).toStringAsFixed(2)}',
-                      style:
-                          const TextStyle(color: Colors.green, fontSize: 15)),
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w500,color: Theme.of(context).colorScheme.secondary)),
                 ],
               ),
             ),
@@ -131,8 +129,8 @@ class CartPage extends StatelessWidget {
         children: [
           Text(
               'Total: \$${cartBloc.cartService.getTotalAmount().toStringAsFixed(2)}',
-              style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.black),
+          ),
           ElevatedButton(
               onPressed: () {
                 _showThanksGivingBottomSheet(context);
@@ -164,9 +162,9 @@ class CartPage extends StatelessWidget {
           initialChildSize: 0.7,
           builder: (_, controller) => Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -177,44 +175,44 @@ class CartPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     "Thank you for trying out this app!",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 15),
-                  const Text(
+                  Text(
                     "Glad you tried this, I tried to deliver this challenge in the shortest time possible but there are many improvements I could have done.",
-                    style: TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 15),
-                  const Text(
+                  Text(
                     "Further enhancements could include:",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     "- Theme Management (better use of colors and text themes)\n- Advanced cart management using SQLite or Hive\n- Strings internationalization\n",
-                    style: TextStyle(fontSize: 16),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "Interested Roles:",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  const Text("Flutter Engineer, Product Management",
-                      style: TextStyle(fontSize: 16)),
+                  Text("Flutter Engineer, Associate Product Manager",
+                      style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 25),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.deepPurple, // Custom button color
+                      backgroundColor: Colors.deepPurple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "View My Resume",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Theme.of(context).colorScheme.surface),
                     ),
                     onPressed: () {
                       _openResume();
@@ -234,10 +232,10 @@ class CartPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_cart, size: 100, color: Colors.grey[300]),
-          const Text(
+          Icon(Icons.shopping_cart, size: 100, color: Theme.of(context).colorScheme.onSurface),
+          Text(
             'Your cart is empty',
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
           ),
           const SizedBox(height: 20),
         ],

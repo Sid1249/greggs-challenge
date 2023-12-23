@@ -20,10 +20,10 @@ class CartBottomBar extends StatelessWidget {
         children: [
           Text(
             '$numCartItems item added',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
             ),
           ),
           const SizedBox(width: 10),
