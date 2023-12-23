@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/scheduler.dart';
 
 abstract class ThemeEvent {}
 
 class ToggleThemeEvent extends ThemeEvent {
-  final bool isOn;
+  final bool isDarkMode;
 
-  ToggleThemeEvent(this.isOn);
+  ToggleThemeEvent(this.isDarkMode);
 }
 
 abstract class ThemeState {
@@ -28,7 +27,7 @@ class ThemeUpdated extends ThemeState {
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc() : super(ThemeInitial()) {
     on<ToggleThemeEvent>((event, emit) {
-      final themeMode = event.isOn ? ThemeMode.dark : ThemeMode.light;
+      final themeMode = event.isDarkMode ? ThemeMode.dark : ThemeMode.light;
       emit(ThemeUpdated(themeMode));
     });
   }

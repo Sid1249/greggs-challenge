@@ -20,9 +20,7 @@ class CartBottomBar extends StatelessWidget {
         children: [
           Text(
             '$numCartItems item added',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.surface,
             ),
           ),
@@ -34,12 +32,9 @@ class CartBottomBar extends StatelessWidget {
               ),
             ),
             onPressed: onViewCartPressed,
-            child: const Text(
+            child: Text(
               'View Cart',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)
             ),
           ),
         ],

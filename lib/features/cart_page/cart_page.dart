@@ -129,7 +129,7 @@ class CartPage extends StatelessWidget {
         children: [
           Text(
               'Total: \$${cartBloc.cartService.getTotalAmount().toStringAsFixed(2)}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.black),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           ElevatedButton(
               onPressed: () {
@@ -169,57 +169,66 @@ class CartPage extends StatelessWidget {
                 topRight: Radius.circular(20),
               ),
             ),
-            child: SingleChildScrollView(
-              controller: controller,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Thank you for trying out this app!",
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    "Glad you tried this, I tried to deliver this challenge in the shortest time possible but there are many improvements I could have done.",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    "Further enhancements could include:",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "- Theme Management (better use of colors and text themes)\n- Advanced cart management using SQLite or Hive\n- Strings internationalization\n",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Interested Roles:",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 5),
-                  Text("Flutter Engineer, Associate Product Manager",
-                      style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 25),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    height: 4,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(
-                      "View My Resume",
-                      style: TextStyle(color: Theme.of(context).colorScheme.surface),
-                    ),
-                    onPressed: () {
-                      _openResume();
-                    },
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "Thank you for trying out this app!",
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "Glad you tried this, I tried to deliver this challenge in the shortest time possible but there are many improvements I could still consider.",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "Further enhancements could include:",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "- Theme Management (better use of colors and text themes)\n- Advanced cart management using SQLite or Hive\n- Strings internationalization\n",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Interested Roles:",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 5),
+                Text("Flutter Engineer, Associate Product Manager",
+                    style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 25),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                  child: Text(
+                    "View My Resume",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  onPressed: () {
+                    _openResume();
+                  },
+                ),
+              ],
             ),
           ),
         );

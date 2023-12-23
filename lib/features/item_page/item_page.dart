@@ -6,6 +6,7 @@ import 'package:greggs_sausage/core/bloc/cart_bloc/bloc.dart';
 import 'package:greggs_sausage/core/bloc/cart_bloc/events.dart';
 import 'package:greggs_sausage/core/bloc/cart_bloc/states.dart';
 import 'package:greggs_sausage/core/services/cart_service/cart_service.dart';
+import 'package:greggs_sausage/core/themes/theme_bloc.dart';
 import 'package:greggs_sausage/core/widgets/add_to_cart_button.dart';
 import 'package:greggs_sausage/core/widgets/cart_bottom_bar.dart';
 import 'package:greggs_sausage/features/item_page/bloc/product_bloc/bloc.dart';
@@ -17,6 +18,7 @@ import 'package:greggs_sausage/routes/routes.gr.dart';
 @RoutePage<String>()
 class ItemPage extends StatelessWidget {
   ItemPage({super.key});
+
   final ValueNotifier<bool> _isProductsLoaded = ValueNotifier(false);
 
   @override
@@ -55,8 +57,7 @@ class ItemPage extends StatelessWidget {
                   numCartItems: cartService.getRawCartItemCount(),
                   onViewCartPressed: () {
                     context.router.push(const CartPageRoute());
-                  }
-              );
+                  });
             } else {
               return const SizedBox.shrink();
             }
@@ -83,31 +84,55 @@ class ItemPage extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 55,
           ),
-          Image.asset(
-            'assets/images/greggs_horizontal.jpeg',
-            scale: 4,
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.menu,color: Theme.of(context).colorScheme.onPrimary,),
+                onPressed: () {},
+              ),
+              const Spacer(),
+              Image.asset(
+                'assets/images/greggs_horizontal.jpeg',
+                scale: 4,
+              ),
+              const Spacer(),
+              IconButton(
+                icon: Icon(Icons.dark_mode, color: Theme.of(context).colorScheme.onPrimary,),
+                onPressed: () {
+                  context.read<ThemeBloc>().add(ToggleThemeEvent(
+                      !BlocProvider.of<ThemeBloc>(context).isDarkMode));
+                },
+              ),
+            ],
           ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12.0),
-                      topRight: Radius.circular(12.0),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(12.0),
                     ),
-                    child: Hero(
-                      tag: 'roll',
-                      child: CachedNetworkImage(
-                        imageUrl: sausageRoll.imageUri,
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                    child: Container(
+                      color: Colors.white,
+                      child: Hero(
+                        tag: 'roll',
+                        child: CachedNetworkImage(
+                          imageUrl: sausageRoll.imageUri,
+                          placeholder: (context, url) =>
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                     ),
                   ),
@@ -138,7 +163,6 @@ class ItemPage extends StatelessWidget {
                             ),
                             AddToCartButton(
                               onIncrement: () {
-
                                 if (context
                                         .read<CartBloc>()
                                         .cartService
@@ -181,10 +205,10 @@ class ItemPage extends StatelessWidget {
                         const SizedBox(height: 24),
                         Text(
                           sausageRoll.customerDescription,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            height: 1.5,
-                            color: Colors.black54,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    height: 1.5,
+                                  ),
                         ),
                         const SizedBox(height: 16),
                       ],

@@ -50,8 +50,7 @@ class AddToCartButton extends StatelessWidget {
                     onTap: onDecrement,
                     child: Icon(
                       Icons.remove,
-                      // onPressed: onDecrement,
-                      color: Theme.of(context).colorScheme!.surface,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                 ),
@@ -71,7 +70,6 @@ class AddToCartButton extends StatelessWidget {
                     onTap: onIncrement,
                     child: Icon(
                       Icons.add,
-                      // onPressed: onDecrement,
                       color: Theme.of(context).colorScheme!.surface,
                     ),
                   ),
